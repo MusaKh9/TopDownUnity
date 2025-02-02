@@ -8,7 +8,6 @@ public class PlayerController : MonoBehaviour
 {
     const string IDLE = "Idle";
     const string WALK = "Walk";
-       
 
     CustomAction input;
     NavMeshAgent agent;
@@ -37,21 +36,42 @@ public class PlayerController : MonoBehaviour
     void ClickToMove()
     {
         RaycastHit hit;
-       if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clicklayer))
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clicklayer))
         {
-            agent.destination = hit.point;
-            if(click != null)
+            // Check if the hit point is near a doorway
+            if (hit.collider.CompareTag("Doorway"))
             {
-                Instantiate(click, hit.point += new Vector3(0, 0.1f, 0), click.transform.rotation);
+                // Temporarily disable collision with the doorway
+                Physics.IgnoreCollision(GetComponent<CapsuleCollider>(), hit.collider, true);
+            }
+
+            // Set the destination
+            agent.destination = hit.point;
+
+            if (click != null)
+            {
+                Instantiate(click, hit.point + new Vector3(0, 0.1f, 0), click.transform.rotation);
+            }
+
+            // Re-enable collision after a short delay (optional)
+            if (hit.collider.CompareTag("Doorway"))
+            {
+                StartCoroutine(ReenableCollision(hit.collider));
             }
         }
     }
 
+    IEnumerator ReenableCollision(Collider doorwayCollider)
+    {
+        yield return new WaitForSeconds(1f); // Adjust delay as needed
+        Physics.IgnoreCollision(GetComponent<CapsuleCollider>(), doorwayCollider, false);
+    }
     private void OnEnable()
     {
         input.Enable();
     }
-    private void OnDisable ()
+
+    private void OnDisable()
     {
         input.Disable();
     }
@@ -71,7 +91,7 @@ public class PlayerController : MonoBehaviour
 
     void SetAnimations()
     {
-        if(agent.velocity == Vector3.zero)
+        if (agent.velocity == Vector3.zero)
         {
             ani.Play(IDLE);
         }
@@ -80,5 +100,4 @@ public class PlayerController : MonoBehaviour
             ani.Play(WALK);
         }
     }
-    
 }

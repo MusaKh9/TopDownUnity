@@ -64,7 +64,7 @@
     <Compile Include="Assets\Mryotaisu\Scripts\MuryotaisuController.cs" />
     <Compile Include="Assets\CustomAction.cs" />
     <Compile Include="Assets\PlayerController.cs" />
-    <Compile Include="Assets\cameraController.cs" />
+    <Compile Include="Assets\CameraSwitch.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Mryotaisu\Readme(English and Japanese).txt" />
