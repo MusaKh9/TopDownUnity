@@ -7,6 +7,7 @@ TagManager:
   - Doorway
   - kitchen
   - Kitchen
+  - Asteroid
   layers:
   - Default
   - TransparentFX
