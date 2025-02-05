@@ -8,6 +8,7 @@ TagManager:
   - kitchen
   - Kitchen
   - Asteroid
+  - ConnectionTrigger
   layers:
   - Default
   - TransparentFX

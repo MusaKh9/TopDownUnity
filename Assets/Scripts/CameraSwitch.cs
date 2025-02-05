@@ -1,28 +1,28 @@
 using UnityEngine;
-
-public class ProximityCameraSystem : MonoBehaviour
+//Written By Musa Khokhar
+public class CameraSwitch : MonoBehaviour
 {
-    [System.Serializable]
+    [System.Serializable] //this allows the array to accessed in the inspector
     public class CameraHotspot
     {
         public Transform hotspotPosition;  // Empty GameObject marking camera area
         public Camera linkedCamera;        // Camera to activate
-        public float activationDistance = 5f;
-        [HideInInspector] public bool isActive;
+        public float activationDistance = 5f; //float for distance to activate 
+        [HideInInspector] public bool isActive; //this is not shown in inspector but is true or false if the mini game is active 
     }
 
-    [Header("Cameras")]
-    public Camera defaultCamera;
-    public CameraHotspot[] cameraHotspots;
+    public Camera defaultCamera; //reference to camera
+    public CameraHotspot[] cameraHotspots; //reference for array of camera activation objects
 
-    [Header("Settings")]
-    public float switchCooldown = 0.5f;    // Prevent rapid switching
+    public float switchCooldown = 0.5f;    // Prevent rapid switching so it has a cooldown to how fast cameras switch
 
-    private Camera activeCamera;
-    private float lastSwitchTime;
+    private Camera activeCamera; //reference to the active camera
+    private float lastSwitchTime; //float to store the last switch time
+
 
     void Start()
     {
+        //this sets default camera active and hides linked cameras
         activeCamera = defaultCamera;
         foreach (CameraHotspot hotspot in cameraHotspots)
         {
@@ -33,10 +33,11 @@ public class ProximityCameraSystem : MonoBehaviour
 
     void Update()
     {
+        //prevents switch if enough time hasn't passed
         if (Time.time - lastSwitchTime < switchCooldown) return;
 
-        CameraHotspot nearestHotspot = null;
-        float closestDistance = Mathf.Infinity;
+        CameraHotspot nearestHotspot = null; //declares a variable for the nearest camera activation point
+        float closestDistance = Mathf.Infinity; //stores the closet distance to infinity initally
 
         // Find closest valid hotspot
         foreach (CameraHotspot hotspot in cameraHotspots)
@@ -56,6 +57,7 @@ public class ProximityCameraSystem : MonoBehaviour
             SwitchCamera(nearestHotspot.linkedCamera);
         }
     }
+
 
     void SwitchCamera(Camera newCamera)
     {
